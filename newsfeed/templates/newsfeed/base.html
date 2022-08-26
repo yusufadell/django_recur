@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {% block head_title %}{% endblock %}
+        </title>
+        {% block head_extra %}
+        {% endblock %}
+    </head>
+    <body>
+    {% block body %}
+        {% block content %}
+        {% endblock %}
+    {% endblock %}
+
+    {% block footer_extra %}
+    {% endblock %}
+    </body>
+</html>

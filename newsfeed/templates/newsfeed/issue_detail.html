@@ -1,0 +1,12 @@
+{% extends 'newsfeed/base.html' %}
+
+{% block head_title %}Issue #{{ issue.issue_number }}{% endblock %}
+
+{% block content %}
+    <h1>Issue #{{ issue.issue_number }}</h1>
+
+    <h3>{{ issue.title }}</h3>
+    <p>{{ issue.short_description }}</p>
+    publish date: <b>{{ issue.publish_date|date:"D d M Y" }}</b>
+
+{% endblock %}
