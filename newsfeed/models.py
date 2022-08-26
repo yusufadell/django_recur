@@ -23,14 +23,17 @@ class IssueQuerySet(models.QuerySet):
         return self.filter(is_draft=False, publish_date__lte=timezone.now())
 
 
-class Issue(models.Model):
+    class IssuesInterval(models.TextChoices):
+        DAILY_ISSUE = "1", "Daily Issue"
+        WEEKLY_ISSUE = "2", "Weekly Issue"
+        MONTHLY_ISSUE = "4", "Weekly Issue"
     title = models.CharField(max_length=128)
     issue_number = models.PositiveIntegerField(
         unique=True, help_text="Used as a slug for each issue"
     )
     publish_date = models.DateTimeField()
-    issue_type = models.PositiveSmallIntegerField(
-        choices=ISSUE_TYPE_CHOICES, default=WEEKLY_ISSUE
+    issue_type = models.CharField(
+        choices=IssuesInterval.choices, max_length=2, default="2"
     )
     short_description = models.TextField(blank=True, null=True)
     is_draft = models.BooleanField(default=False)
