@@ -3,16 +3,13 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-DAILY_ISSUE = 1
-WEEKLY_ISSUE = 2
-MONTHLY_ISSUE = 2
 
+class TimeStampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-ISSUE_TYPE_CHOICES = (
-    (DAILY_ISSUE, "Daily Issue"),
-    (WEEKLY_ISSUE, "Weekly Issue"),
-    (MONTHLY_ISSUE, "Monthly Issue"),
-)
+    class Meta:
+        abstract = True
 
 
 class IssueQuerySet(models.QuerySet):
@@ -23,10 +20,12 @@ class IssueQuerySet(models.QuerySet):
         return self.filter(is_draft=False, publish_date__lte=timezone.now())
 
 
+class Issue(TimeStampedModel, models.Model):
     class IssuesInterval(models.TextChoices):
         DAILY_ISSUE = "1", "Daily Issue"
         WEEKLY_ISSUE = "2", "Weekly Issue"
         MONTHLY_ISSUE = "4", "Weekly Issue"
+
     title = models.CharField(max_length=128)
     issue_number = models.PositiveIntegerField(
         unique=True, help_text="Used as a slug for each issue"
@@ -37,9 +36,6 @@ class IssueQuerySet(models.QuerySet):
     )
     short_description = models.TextField(blank=True, null=True)
     is_draft = models.BooleanField(default=False)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     objects = IssueQuerySet.as_manager()
 
@@ -65,7 +61,7 @@ class PostCategory(models.Model):
         return self.name
 
 
-class Post(models.Model):
+class Post(TimeStampedModel, models.Model):
     issue = models.ForeignKey(
         Issue, on_delete=models.SET_NULL, related_name="posts", blank=True, null=True
     )
@@ -81,9 +77,6 @@ class Post(models.Model):
     is_visible = models.BooleanField(default=False)
     short_description = models.TextField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     class Meta:
         ordering = ["-created_at"]
 
@@ -91,7 +84,7 @@ class Post(models.Model):
         return self.title
 
 
-class Newsletter(models.Model):
+class Newsletter(TimeStampedModel, models.Model):
     issue = models.ForeignKey(
         Issue, on_delete=models.CASCADE, related_name="newsletters"
     )
@@ -99,21 +92,16 @@ class Newsletter(models.Model):
     is_sent = models.BooleanField(default=False)
     schedule = models.DateTimeField(blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self):
         return self.subject
 
 
-class Subscriber(models.Model):
+class Subscriber(TimeStampedModel, models.Model):
     email_address = models.EmailField(unique=True)
     token = models.CharField(max_length=128, unique=True)
     verified = models.BooleanField(default=False)
     subscribed = models.BooleanField(default=False)
     confirmation_sent_date = models.DateTimeField()
-
-    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.email_address
