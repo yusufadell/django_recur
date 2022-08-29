@@ -1,4 +1,5 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.utils import timezone
 
 from .models import Issue, Newsletter, Post, PostCategory, Subscriber
 
@@ -16,6 +17,7 @@ class IssueAdmin(admin.ModelAdmin):
     list_display = (
         "title",
         "issue_number",
+        "is_published",
         "publish_date",
         "issue_type",
         "is_draft",
@@ -38,6 +40,30 @@ class IssueAdmin(admin.ModelAdmin):
         "issue_number",
         "publish_date",
     )
+    actions = (
+        "publish_issues",
+        "make_draft",
+    )
+
+    def publish_issues(self, request, queryset):
+        updated = queryset.update(is_draft=False)
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            f"Successfully published {updated} issue(s)",
+        )
+
+    publish_issues.short_description = "Publish issues now"
+
+    def make_draft(self, request, queryset):
+        updated = queryset.update(is_draft=True)
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            f"Successfully marked {updated} issue(s) as draft",
+        )
+
+    make_draft.short_description = "Mark issues as draft"
 
 
 @admin.register(Newsletter)
@@ -62,6 +88,18 @@ class NewsletterAdmin(admin.ModelAdmin):
     )
     sortable_by = ("schedule",)
     autocomplete_fields = ("issue",)
+
+    actions = ("send_newsletters",)
+
+    def send_newsletters(self, request, queryset):
+        # TODO: Send newsletters to subscribers
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            f"Successfully sent {0} newsletters(s) to subscribers",
+        )
+
+    send_newsletters.short_description = "Send newsletters"
 
 
 @admin.register(Post)
@@ -96,10 +134,38 @@ class PostAdmin(admin.ModelAdmin):
         "category",
     )
 
+    actions = (
+        "hide_post",
+        "make_post_visible",
+    )
+
+    def hide_post(self, request, queryset):
+        updated = queryset.update(is_visible=False)
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            f"Successfully marked {updated} post(s) as hidden",
+        )
+
+    hide_post.short_description = "Hide posts from issue"
+
+    def make_post_visible(self, request, queryset):
+        updated = queryset.update(is_visible=True)
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            f"Successfully made {updated} post(s) visible",
+        )
+
+    make_post_visible.short_description = "Make posts visible"
+
 
 @admin.register(PostCategory)
 class PostCategoryAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = (
+        "name",
+        "id",
+    )
     search_fields = ("name",)
 
 

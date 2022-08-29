@@ -40,15 +40,18 @@ class Issue(TimeStampedModel, models.Model):
     objects = IssueQuerySet.as_manager()
 
     class Meta:
-        ordering = ["-publish_date", "-created_at"]
+        ordering = ["-publish_date", "-issue_number"]
 
-    def __str__(self):
-        return self.title
+    def is_published(self):
+        return self.is_draft == False and self.publish_date <= timezone.now()
 
     def get_absolute_url(self):
         return reverse(
             "newsfeed:issue_detail", kwargs={"issue_number": self.issue_number}
         )
+
+    def __str__(self):
+        return self.title
 
 
 class PostCategory(models.Model):
