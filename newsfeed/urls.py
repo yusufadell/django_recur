@@ -1,10 +1,29 @@
 from django.urls import path
 
-from .views import issue_detail_view, issue_list_view
+from .views import (
+    IssueDetailView,
+    IssueListView,
+    LatestIssueView,
+    NewsletterSubscribeView,
+    NewsletterSubscriptionConfirmView,
+    NewsletterUnsubscribeView,
+)
 
 app_name = "newsfeed"
 
 urlpatterns = [
-    path("", issue_list_view, name="issue_list"),
-    path("<slug:issue_number>/", issue_detail_view, name="issue_detail"),
+    path("", LatestIssueView.as_view(), name="latest_issue"),
+    path("issues/", IssueListView.as_view(), name="issue_list"),
+    path("issues/<slug:issue_number>/", IssueDetailView.as_view(), name="issue_detail"),
+    path("subscribe/", NewsletterSubscribeView.as_view(), name="newsletter_subscribe"),
+    path(
+        "subscribe/confirm/<uuid:token>/",
+        NewsletterSubscriptionConfirmView.as_view(),
+        name="newsletter_subscription_confirm",
+    ),
+    path(
+        "unsubscribe/",
+        NewsletterUnsubscribeView.as_view(),
+        name="newsletter_unsubscribe",
+    ),
 ]
