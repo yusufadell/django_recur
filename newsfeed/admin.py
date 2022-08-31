@@ -175,13 +175,13 @@ class SubscriberAdmin(admin.ModelAdmin):
         "email_address",
         "subscribed",
         "verified",
-        "confirmation_expired",
-        "confirmation_sent_date",
+        "token_expired",
+        "verification_sent_date",
     )
     list_filter = (
         "subscribed",
         "verified",
-        "confirmation_sent_date",
+        "verification_sent_date",
     )
     search_fields = ("email_address",)
     date_hierarchy = "created_at"
