@@ -9,7 +9,9 @@
     </head>
     <body>
     {% block body %}
+        {% include 'newsfeed/messages.html' %}
         {% block content %}
+            <!-- Add content here -->
         {% endblock %}
     {% endblock %}
 

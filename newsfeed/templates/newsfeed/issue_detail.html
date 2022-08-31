@@ -9,4 +9,5 @@
     <p>{{ issue.short_description }}</p>
     publish date: <b>{{ issue.publish_date|date:"D d M Y" }}</b>
 
+    {% include 'newsfeed/issue_posts.html' with posts=object_list %}
 {% endblock %}
