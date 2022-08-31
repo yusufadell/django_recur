@@ -121,10 +121,15 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# Settings for smtp
+EMAIL_HOST = "EMAIL_HOST"
+EMAIL_HOST_USER = "EMAIL_HOST_USER"
+EMAIL_HOST_PASSWORD = "EMAIL_HOST_PASSWORD"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Newsfeed settings
-SUBSCRIPTION_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
