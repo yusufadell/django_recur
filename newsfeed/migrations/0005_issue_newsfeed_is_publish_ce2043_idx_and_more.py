@@ -32,7 +32,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="postcategory",
-            index=models.Index(fields=["order"], name="newsfeed_po_order_bd5355_idx"),
+            index=models.Index(
+                fields=["order"], name="newsfeed_po_order_bd5355_idx"),
         ),
         migrations.AddIndex(
             model_name="subscriber",
