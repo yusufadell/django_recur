@@ -5,10 +5,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-from newsfeed import signals
-from newsfeed.app_settings import NEWSFEED_EMAIL_CONFIRMATION_EXPIRE_DAYS
-from newsfeed.querysets import IssueQuerySet, PostQuerySet, SubscriberQuerySet
-from newsfeed.utils import send_subscription_verification_email
+from newsfeed.managers import CustomIssueManager
 
 
 class Issue(models.Model):
@@ -33,6 +30,7 @@ class Issue(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = CustomIssueManager()
     class Meta:
         ordering = ["-publish_date", "-issue_number"]
 
