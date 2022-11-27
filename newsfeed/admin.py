@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
-from django.contrib import admin
+from django.contrib import admin, messages
 
-from .models import Issue, PostCategory, Post, Newsletter
+from newsfeed.models import Issue, PostCategory, Post, Newsletter, Subscriber
+from newsfeed.utils import send_email_newsletter
+
+
+class PostInline(admin.StackedInline):
+    model = Post
+    extra = 0
+    raw_id_fields = ('category', )
+    classes = ("collapse", )
 
 
 @admin.register(Issue)
@@ -20,6 +28,12 @@ class IssueAdmin(admin.ModelAdmin):
     list_filter = ("publish_date", "is_draft", "created_at", "updated_at")
     date_hierarchy = "created_at"
     search_fields = ("issue_number", "title", "short_description")
+
+    inlines = (PostInline, )
+    readonly_fields = (
+        'created_at',
+        'updated_at',
+    )
 
 
 @admin.register(PostCategory)
@@ -57,77 +71,57 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
-        'issue',
-        'subject',
-        'schedule',
-        'is_sent',
-        'sent_at',
-        'created_at',
-        'updated_at',
+        "id",
+        "issue",
+        "subject",
+        "schedule",
+        "is_sent",
+        "sent_at",
+        "created_at",
+        "updated_at",
     )
     list_filter = (
-        'issue',
-        'schedule',
-        'is_sent',
-        'sent_at',
-        'created_at',
-        'updated_at',
+        "issue",
+        "schedule",
+        "is_sent",
+        "sent_at",
+        "created_at",
+        "updated_at",
     )
-    date_hierarchy = 'created_at'
+    date_hierarchy = "created_at"
     autocomplete_fields = ("issue", )
 
+    actions = ('send_newsletters', )
 
-
-    actions = (
-        "hide_post",
-        "make_post_visible",
-    )
-
-    def hide_post(self, request, queryset):
-        updated = queryset.update(is_visible=False)
+    def send_newsletters(self, request, queryset):
+        # This should always be overridden to use a task
+        send_email_newsletter(newsletters=queryset, respect_schedule=False)
         messages.add_message(
             request,
             messages.SUCCESS,
-            f"Successfully marked {updated} post(s) as hidden",
+            'Sending selected newsletters(s) to the subscribers',
         )
 
-    hide_post.short_description = "Hide posts from issue"
-
-    def make_post_visible(self, request, queryset):
-        updated = queryset.update(is_visible=True)
-        messages.add_message(
-            request,
-            messages.SUCCESS,
-            f"Successfully made {updated} post(s) visible",
-        )
-
-    make_post_visible.short_description = "Make posts visible"
-
-
-@admin.register(PostCategory)
-class PostCategoryAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "id",
-    )
-    search_fields = ("name",)
+    send_newsletters.short_description = 'Send newsletters'
 
 
 @admin.register(Subscriber)
 class SubscriberAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "email_address",
-        "subscribed",
+        "token",
         "verified",
-        "token_expired",
+        "subscribed",
         "verification_sent_date",
+        "created_at",
     )
     list_filter = (
-        "subscribed",
         "verified",
+        "subscribed",
         "verification_sent_date",
+        "created_at",
     )
-    search_fields = ("email_address",)
     date_hierarchy = "created_at"
-    exclude = ("token",)
+    readonly_fields = ("token", )
+    search_fields = ("email_address", )
