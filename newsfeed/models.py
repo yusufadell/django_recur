@@ -89,17 +89,22 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-
-class Newsletter(TimeStampedModel, models.Model):
+class Newsletter(models.Model):
     issue = models.ForeignKey(
-        Issue, on_delete=models.CASCADE, related_name="newsletters"
+        Issue,
+        on_delete=models.CASCADE,
+        related_name="newsletters",
     )
     subject = models.CharField(max_length=128)
-    is_sent = models.BooleanField(default=False)
     schedule = models.DateTimeField(blank=True, null=True)
+    is_sent = models.BooleanField(default=False)
+    sent_at = models.DateTimeField(blank=True, null=True)
 
-    def __str__(self):
-        return self.subject
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-schedule"]
 
 
 class Subscriber(models.Model):
