@@ -109,14 +109,17 @@ class Newsletter(models.Model):
 
 class Subscriber(models.Model):
     email_address = models.EmailField(unique=True)
-    token = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    token = models.UUIDField(max_length=128, unique=True, default=uuid.uuid4)
     verified = models.BooleanField(default=False)
     subscribed = models.BooleanField(default=False)
     verification_sent_date = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    objects = SubscriberQuerySet.as_manager()
+    objects = CustomSubscriberManager()
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.email_address
