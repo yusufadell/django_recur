@@ -5,7 +5,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-from newsfeed.managers import CustomIssueManager
+from newsfeed.managers import CustomIssueManager, CustomPostManager, CustomSubscriberManager
 
 
 class Issue(models.Model):
