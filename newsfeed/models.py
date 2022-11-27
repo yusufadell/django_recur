@@ -11,35 +11,27 @@ from newsfeed.querysets import IssueQuerySet, PostQuerySet, SubscriberQuerySet
 from newsfeed.utils import send_subscription_verification_email
 
 
-class TimeStampedModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    order = models.PositiveIntegerField(default=0)
+class Issue(models.Model):
 
-    class Meta:
-        abstract = True
-
-
-class Issue(TimeStampedModel, models.Model):
     class Interval(models.TextChoices):
         DAILY_ISSUE = "1", "Daily Issue"
         WEEKLY_ISSUE = "2", "Weekly Issue"
-        MONTHLY_ISSUE = "4", "Weekly Issue"
+        MONTHLY_ISSUE = "3", "Monthly Issue"
 
     title = models.CharField(max_length=128)
     issue_number = models.PositiveIntegerField(
-        unique=True, help_text="Used as a slug for each issue"
-    )
+        unique=True, help_text="Used as a slug for each issue")
     publish_date = models.DateTimeField()
     issue_type = models.CharField(
+        max_length=1,
         choices=Interval.choices,
-        max_length=2,
-        default="2",
+        default=Interval.WEEKLY_ISSUE,
     )
     short_description = models.TextField(blank=True, null=True)
     is_draft = models.BooleanField(default=False)
 
-    objects = IssueQuerySet.as_manager()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-publish_date", "-issue_number"]
