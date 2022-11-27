@@ -55,6 +55,8 @@ class PostCategory(models.Model):
         ordering = ["order"]
         indexes = [models.Index(fields=["order"])]
 
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
     issue = models.ForeignKey(
