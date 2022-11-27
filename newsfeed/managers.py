@@ -3,7 +3,6 @@ from django.utils import timezone
 
 
 class IssueQuerySet(models.QuerySet):
-
     def released(self):
         return self.filter(
             is_draft=False,
