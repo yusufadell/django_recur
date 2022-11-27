@@ -48,17 +48,21 @@ class Issue(models.Model):
 
 class PostCategory(models.Model):
     name = models.CharField(max_length=255)
+    order = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name_plural = "Post categories"
+        ordering = ["order"]
+        # indexes = [models.Index(fields=["order"])]
 
-    def __str__(self):
-        return self.name
 
-
-class Post(TimeStampedModel, models.Model):
+class Post(models.Model):
     issue = models.ForeignKey(
-        Issue, on_delete=models.SET_NULL, related_name="posts", blank=True, null=True
+        Issue,
+        on_delete=models.SET_NULL,
+        related_name="posts",
+        blank=True,
+        null=True,
     )
     category = models.ForeignKey(
         PostCategory,
@@ -69,13 +73,18 @@ class Post(TimeStampedModel, models.Model):
     )
     title = models.CharField(max_length=255)
     source_url = models.URLField()
-    is_visible = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
     short_description = models.TextField()
+    order = models.PositiveIntegerField(default=0)
 
-    objects = PostQuerySet.as_manager()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = CustomPostManager()
 
     class Meta:
         ordering = ["order", "-created_at"]
+        # indexes = [
 
     def __str__(self):
         return self.title
