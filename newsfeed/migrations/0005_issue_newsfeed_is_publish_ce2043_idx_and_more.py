@@ -19,8 +19,9 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="newsletter",
-            index=models.Index(fields=["-schedule"],
-                               name="newsfeed_ne_schedul_a61f24_idx"),
+            index=models.Index(
+                fields=["-schedule"], name="newsfeed_ne_schedul_a61f24_idx"
+            ),
         ),
         migrations.AddIndex(
             model_name="post",
@@ -31,12 +32,12 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="postcategory",
-            index=models.Index(fields=["order"],
-                               name="newsfeed_po_order_bd5355_idx"),
+            index=models.Index(fields=["order"], name="newsfeed_po_order_bd5355_idx"),
         ),
         migrations.AddIndex(
             model_name="subscriber",
-            index=models.Index(fields=["-created_at"],
-                               name="newsfeed_su_created_bd1997_idx"),
+            index=models.Index(
+                fields=["-created_at"], name="newsfeed_su_created_bd1997_idx"
+            ),
         ),
     ]

@@ -3,7 +3,6 @@ from django.utils import timezone
 
 
 class IssueQuerySet(models.QuerySet):
-
     def released(self):
         return self.filter(
             is_draft=False,
@@ -21,6 +20,7 @@ class IssueQuerySet(models.QuerySet):
             )
         )
 
+
 # manager from query set
 
 
@@ -29,7 +29,6 @@ class CustomIssueManager(models.Manager.from_queryset(IssueQuerySet)):
 
 
 class PostQuerySet(models.QuerySet):
-
     def visible(self):
         return self.filter(is_visible=True)
 
@@ -45,11 +44,9 @@ class CustomPostManager(models.Manager.from_queryset(PostQuerySet)):
 
 
 class SubscriberQuerySet(models.QuerySet):
-
     def subscribed(self):
         self.annotate(subscribed=models.Case(subscribed=True))
 
 
-class CustomSubscriberManager(models.Manager.from_queryset(SubscriberQuerySet)
-                              ):
+class CustomSubscriberManager(models.Manager.from_queryset(SubscriberQuerySet)):
     pass

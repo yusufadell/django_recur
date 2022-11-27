@@ -13,8 +13,8 @@ from newsfeed.utils import send_email_newsletter
 class PostInline(admin.StackedInline):
     model = Post
     extra = 0
-    raw_id_fields = ("category", )
-    classes = ("collapse", )
+    raw_id_fields = ("category",)
+    classes = ("collapse",)
 
 
 @admin.register(Issue)
@@ -34,7 +34,7 @@ class IssueAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     search_fields = ("issue_number", "title", "short_description")
 
-    inlines = (PostInline, )
+    inlines = (PostInline,)
     readonly_fields = (
         "created_at",
         "updated_at",
@@ -44,7 +44,7 @@ class IssueAdmin(admin.ModelAdmin):
 @admin.register(PostCategory)
 class PostCategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "order")
-    search_fields = ("name", )
+    search_fields = ("name",)
 
 
 @admin.register(Post)
@@ -94,9 +94,9 @@ class NewsletterAdmin(admin.ModelAdmin):
         "updated_at",
     )
     date_hierarchy = "created_at"
-    autocomplete_fields = ("issue", )
+    autocomplete_fields = ("issue",)
 
-    actions = ("send_newsletters", )
+    actions = ("send_newsletters",)
 
     def send_newsletters(self, request, queryset):
         # This should always be overridden to use a task
@@ -128,5 +128,5 @@ class SubscriberAdmin(admin.ModelAdmin):
         "created_at",
     )
     date_hierarchy = "created_at"
-    readonly_fields = ("token", )
-    search_fields = ("email_address", )
+    readonly_fields = ("token",)
+    search_fields = ("email_address",)
