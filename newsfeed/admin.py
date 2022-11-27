@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.contrib import admin, messages
+from django.contrib import admin
+from django.contrib import messages
 
-from newsfeed.models import Issue, Newsletter, Post, PostCategory, Subscriber
+from newsfeed.models import Issue
+from newsfeed.models import Newsletter
+from newsfeed.models import Post
+from newsfeed.models import PostCategory
+from newsfeed.models import Subscriber
 from newsfeed.utils import send_email_newsletter
 
 
