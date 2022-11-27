@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
-from django.contrib import admin, messages
+from django.contrib import admin
+from django.contrib import messages
 
-from newsfeed.models import Issue, PostCategory, Post, Newsletter, Subscriber
+from newsfeed.models import Issue
+from newsfeed.models import Newsletter
+from newsfeed.models import Post
+from newsfeed.models import PostCategory
+from newsfeed.models import Subscriber
 from newsfeed.utils import send_email_newsletter
 
 
 class PostInline(admin.StackedInline):
     model = Post
     extra = 0
-    raw_id_fields = ('category', )
+    raw_id_fields = ("category", )
     classes = ("collapse", )
 
 
@@ -31,8 +36,8 @@ class IssueAdmin(admin.ModelAdmin):
 
     inlines = (PostInline, )
     readonly_fields = (
-        'created_at',
-        'updated_at',
+        "created_at",
+        "updated_at",
     )
 
 
@@ -91,7 +96,7 @@ class NewsletterAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     autocomplete_fields = ("issue", )
 
-    actions = ('send_newsletters', )
+    actions = ("send_newsletters", )
 
     def send_newsletters(self, request, queryset):
         # This should always be overridden to use a task
@@ -99,10 +104,10 @@ class NewsletterAdmin(admin.ModelAdmin):
         messages.add_message(
             request,
             messages.SUCCESS,
-            'Sending selected newsletters(s) to the subscribers',
+            "Sending selected newsletters(s) to the subscribers",
         )
 
-    send_newsletters.short_description = 'Send newsletters'
+    send_newsletters.short_description = "Send newsletters"
 
 
 @admin.register(Subscriber)
