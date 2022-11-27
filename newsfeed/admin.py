@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .models import Issue, PostCategory, Post
+from .models import Issue, PostCategory, Post, Newsletter
 
 
 @admin.register(Issue)
@@ -25,7 +25,7 @@ class IssueAdmin(admin.ModelAdmin):
 @admin.register(PostCategory)
 class PostCategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "order")
-    search_fields = ("name",)
+    search_fields = ("name", )
 
 
 @admin.register(Post)
@@ -52,6 +52,30 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     search_fields = ("issue", "title", "source_url", "short_description")
     autocomplete_fields = ("issue", "category")
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'issue',
+        'subject',
+        'schedule',
+        'is_sent',
+        'sent_at',
+        'created_at',
+        'updated_at',
+    )
+    list_filter = (
+        'issue',
+        'schedule',
+        'is_sent',
+        'sent_at',
+        'created_at',
+        'updated_at',
+    )
+    date_hierarchy = 'created_at'
+    autocomplete_fields = ("issue", )
 
 
 
