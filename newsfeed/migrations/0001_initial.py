@@ -26,8 +26,8 @@ class Migration(migrations.Migration):
                 (
                     "issue_number",
                     models.PositiveIntegerField(
-                        help_text="Used as a slug for each issue", unique=True
-                    ),
+                        help_text="Used as a slug for each issue",
+                        unique=True),
                 ),
                 ("publish_date", models.DateTimeField()),
                 (
