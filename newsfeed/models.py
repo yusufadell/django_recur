@@ -37,7 +37,8 @@ class Issue(models.Model):
 
     def get_absolute_url(self):
         return reverse(
-            "newsfeed:issue_detail", kwargs={"issue_number": self.issue_number}
+            "newsfeed:issue_detail",
+            kwargs={"issue_number": self.issue_number},
         )
 
     def __str__(self):
