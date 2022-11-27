@@ -3,9 +3,8 @@ import uuid
 from django.db import models
 from django.urls import reverse
 
-from newsfeed.managers import CustomIssueManager
-from newsfeed.managers import CustomPostManager
-from newsfeed.managers import CustomSubscriberManager
+from newsfeed.managers import (CustomIssueManager, CustomPostManager,
+                               CustomSubscriberManager)
 
 
 class Issue(models.Model):
