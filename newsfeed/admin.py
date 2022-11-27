@@ -1,138 +1,59 @@
-from django.contrib import admin, messages
-from django.utils import timezone
+# -*- coding: utf-8 -*-
+from django.contrib import admin
 
-from .models import Issue, Newsletter, Post, PostCategory, Subscriber
-
-
-class PostInline(admin.StackedInline):
-    model = Post
+from .models import Issue, PostCategory, Post
 
 
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
-    view_on_site = True
-    inlines = (PostInline,)
-    date_hierarchy = "publish_date"
-
     list_display = (
+        "id",
         "title",
         "issue_number",
-        "is_published",
         "publish_date",
         "issue_type",
-        "is_draft",
-    )
-    list_filter = (
-        "is_draft",
-        "issue_type",
-    )
-    search_fields = (
-        "title",
         "short_description",
-        "posts__title",
-        "posts__short_description",
-    )
-    readonly_fields = (
+        "is_draft",
         "created_at",
         "updated_at",
     )
-    sortable_by = (
-        "issue_number",
-        "publish_date",
-    )
-    actions = (
-        "publish_issues",
-        "make_draft",
-    )
-
-    def publish_issues(self, request, queryset):
-        updated = queryset.update(is_draft=False)
-        messages.add_message(
-            request,
-            messages.SUCCESS,
-            f"Successfully published {updated} issue(s)",
-        )
-
-    publish_issues.short_description = "Publish issues now"
-
-    def make_draft(self, request, queryset):
-        updated = queryset.update(is_draft=True)
-        messages.add_message(
-            request,
-            messages.SUCCESS,
-            f"Successfully marked {updated} issue(s) as draft",
-        )
-
-    make_draft.short_description = "Mark issues as draft"
+    list_filter = ("publish_date", "is_draft", "created_at", "updated_at")
+    date_hierarchy = "created_at"
+    search_fields = ("issue_number", "title", "short_description")
 
 
-@admin.register(Newsletter)
-class NewsletterAdmin(admin.ModelAdmin):
-    list_select_related = ("issue",)
-    date_hierarchy = "schedule"
-    list_display = (
-        "subject",
-        "issue",
-        "is_sent",
-        "schedule",
-    )
-    list_filter = ("is_sent",)
-    search_fields = (
-        "subject",
-        "issue__short_description",
-        "issue__title",
-    )
-    readonly_fields = (
-        "created_at",
-        "updated_at",
-    )
-    sortable_by = ("schedule",)
-    autocomplete_fields = ("issue",)
-
-    actions = ("send_newsletters",)
-
-    def send_newsletters(self, request, queryset):
-        # TODO: Send newsletters to subscribers
-        messages.add_message(
-            request,
-            messages.SUCCESS,
-            f"Successfully sent {0} newsletters(s) to subscribers",
-        )
-
-    send_newsletters.short_description = "Send newsletters"
+@admin.register(PostCategory)
+class PostCategoryAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "order")
+    search_fields = ("name",)
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_select_related = (
-        "issue",
-        "category",
-    )
     list_display = (
-        "title",
-        "category",
+        "id",
         "issue",
-        "is_visible",
-    )
-    list_filter = (
-        "is_visible",
         "category",
-    )
-    search_fields = (
         "title",
+        "source_url",
+        "is_visible",
         "short_description",
-        "issue__title",
-        "issue__short_description",
-        "category__title",
-    )
-    readonly_fields = (
+        "order",
         "created_at",
         "updated_at",
     )
-    autocomplete_fields = (
+    list_filter = (
         "issue",
         "category",
+        "is_visible",
+        "created_at",
+        "updated_at",
     )
+    date_hierarchy = "created_at"
+    search_fields = ("issue", "title", "source_url", "short_description")
+    autocomplete_fields = ("issue", "category")
+
+
 
     actions = (
         "hide_post",
