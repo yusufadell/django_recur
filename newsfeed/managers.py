@@ -10,14 +10,6 @@ class IssueQuerySet(models.QuerySet):
             publish_date__lte=timezone.now(),
         )
 
-    def released2(self):
-        return self.annotate(released=models.Case(
-            models.When(
-                is_draft=False, publish_date__lte=timezone.now(), then=True),
-            default=False,
-            output_field=models.BooleanField(),
-        ))
-
 
 # manager from query set
 
