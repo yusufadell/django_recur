@@ -22,6 +22,8 @@ class IssueQuerySet(models.QuerySet):
         )
 
 # manager from query set
+
+
 class CustomIssueManager(models.Manager.from_queryset(IssueQuerySet)):
     pass
 
