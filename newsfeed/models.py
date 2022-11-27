@@ -9,6 +9,7 @@ from newsfeed.managers import CustomSubscriberManager
 
 
 class Issue(models.Model):
+
     class Interval(models.TextChoices):
         DAILY_ISSUE = "1", "Daily Issue"
         WEEKLY_ISSUE = "2", "Weekly Issue"
@@ -16,8 +17,7 @@ class Issue(models.Model):
 
     title = models.CharField(max_length=128)
     issue_number = models.PositiveIntegerField(
-        unique=True, help_text="Used as a slug for each issue"
-    )
+        unique=True, help_text="Used as a slug for each issue")
     publish_date = models.DateTimeField()
     issue_type = models.CharField(
         max_length=1,
@@ -85,14 +85,12 @@ class Post(models.Model):
     class Meta:
         ordering = ["order", "-created_at"]
         indexes = [
-            models.Index(
-                fields=[
-                    "issue",
-                    "category",
-                    "order",
-                    "-created_at",
-                ],
-            )
+            models.Index(fields=[
+                "issue",
+                "category",
+                "order",
+                "-created_at",
+            ], )
         ]
 
     def __str__(self):
